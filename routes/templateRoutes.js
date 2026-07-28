@@ -35,4 +35,34 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
+// Admin only: update an existing template
+router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const { name, description, imageUrl, qualities } = req.body;
+        if (!name || !description || !imageUrl) {
+            return res.status(400).json({ message: 'Name, description and image URL are required' });
+        }
+        const template = await Template.findByIdAndUpdate(
+            req.params.id,
+            { name, description, imageUrl, qualities: qualities || [] },
+            { new: true, runValidators: true }
+        );
+        if (!template) return res.status(404).json({ message: 'Template not found' });
+        res.json(template);
+    } catch (err) {
+        res.status(500).json({ message: 'Something went wrong', error: err.message });
+    }
+});
+
+// Admin only: delete a template
+router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const template = await Template.findByIdAndDelete(req.params.id);
+        if (!template) return res.status(404).json({ message: 'Template not found' });
+        res.json({ message: 'Template deleted' });
+    } catch (err) {
+        res.status(500).json({ message: 'Something went wrong', error: err.message });
+    }
+});
+
 module.exports = router;
