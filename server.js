@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const templateRoutes = require('./routes/templateRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const testimonialRoutes = require('./routes/testimonialRoutes');
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/templates', templateRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/testimonials', testimonialRoutes);
 
 // MongoDB connection with keep-alive to reduce cold-start reconnection delay
 mongoose.connect(mongoConnectionString, {
