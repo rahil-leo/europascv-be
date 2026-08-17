@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         }
 
         const templates = await Template.find()
-            .select('name imageUrl qualities createdAt')
+            .select('name imageUrl qualities price createdAt')
             .sort({ createdAt: -1 })
             .lean();
 
@@ -54,14 +54,15 @@ router.get('/:id', async (req, res) => {
 // Admin only: add a new template
 router.post('/', requireAuth, requireAdmin, async (req, res) => {
     try {
-        const { name, description, imageUrl, qualities } = req.body;
-        if (!name || !description || !imageUrl) {
-            return res.status(400).json({ message: 'Name, description and image URL are required' });
+        const { name, description, imageUrl, price, qualities } = req.body;
+        if (!name || !description || !imageUrl || !price) {
+            return res.status(400).json({ message: 'Name, description, image URL and price are required' });
         }
         const template = await Template.create({
             name,
             description,
             imageUrl,
+            price,
             qualities: qualities || []
         });
         invalidateListCache();
@@ -74,13 +75,13 @@ router.post('/', requireAuth, requireAdmin, async (req, res) => {
 // Admin only: update an existing template
 router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
     try {
-        const { name, description, imageUrl, qualities } = req.body;
-        if (!name || !description || !imageUrl) {
-            return res.status(400).json({ message: 'Name, description and image URL are required' });
+        const { name, description, imageUrl, price, qualities } = req.body;
+        if (!name || !description || !imageUrl || !price) {
+            return res.status(400).json({ message: 'Name, description, image URL and price are required' });
         }
         const template = await Template.findByIdAndUpdate(
             req.params.id,
-            { name, description, imageUrl, qualities: qualities || [] },
+            { name, description, imageUrl, price, qualities: qualities || [] },
             { new: true, runValidators: true }
         );
         if (!template) return res.status(404).json({ message: 'Template not found' });
@@ -104,4 +105,3 @@ router.delete('/:id', requireAuth, requireAdmin, async (req, res) => {
 });
 
 module.exports = router;
-
