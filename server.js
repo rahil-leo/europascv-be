@@ -18,7 +18,8 @@ app.use(compression());
 // CORS with preflight caching (1 hour) to avoid redundant OPTIONS requests
 app.use(cors({ maxAge: 3600 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
+
 
 app.use('/api/auth', authRoutes);
 app.use('/api/templates', templateRoutes);
