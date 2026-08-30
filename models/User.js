@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
     phone:   { type: String, default: '' },
     address: { type: String, default: '' },
     avatar:  { type: String, default: '' }, // Cloudinary URL
+
+    // Security & OTP fields
+    isVerified: { type: Boolean, default: false },
+    otp: { type: String },
+    otpExpires: { type: Date }
 }, { timestamps: true });
 
 // Virtual: profile is complete when all three optional fields are filled
