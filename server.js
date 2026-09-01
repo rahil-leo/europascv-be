@@ -28,6 +28,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/work', require('./routes/workRoutes'));
 app.use('/api/settings', require('./routes/settingsRoutes'));
+app.use('/api/job-portals', require('./routes/jobPortalRoutes'));
 
 // MongoDB connection with keep-alive to reduce cold-start reconnection delay
 mongoose.connect(mongoConnectionString, {
