@@ -5,7 +5,21 @@ const { requireAuth, requireAdmin } = require('../middleware/auth');
 
 router.get('/', async (req, res) => {
     try {
-        const portals = await JobPortal.find().sort({ country: 1, name: 1 }).lean();
+        const { search } = req.query;
+        let query = {};
+
+        if (search) {
+            const regex = new RegExp(search, 'i'); // case-insensitive partial match
+            query = {
+                $or: [
+                    { name: regex },
+                    { country: regex },
+                    { description: regex }
+                ]
+            };
+        }
+
+        const portals = await JobPortal.find(query).sort({ country: 1, name: 1 }).lean();
         res.json(portals);
     } catch (err) {
         res.status(500).json({ message: 'Failed to load job portals', error: err.message });
