@@ -12,6 +12,7 @@ const testimonialRoutes = require('./routes/testimonialRoutes');
 const workRoutes = require('./routes/workRoutes');
 const settingsRoutes = require('./routes/settingsRoutes');
 const chatRoutes = require('./routes/chatRoutes');
+const wishlistRoutes = require('./routes/wishlistRoutes');
 
 const app = express();
 
@@ -36,6 +37,8 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/work', workRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/promos', require('./routes/promoRoutes'));
 app.use('/api/job-portals', require('./routes/jobPortalRoutes'));
 
 // MongoDB connection with keep-alive to reduce cold-start reconnection delay

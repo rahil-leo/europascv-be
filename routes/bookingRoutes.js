@@ -6,16 +6,30 @@ const { requireAuth, requireAdmin } = require('../middleware/auth');
 // Logged-in user: book a template
 router.post('/', requireAuth, async (req, res) => {
     try {
-        const { templateId, phone, notes } = req.body;
+        const { templateId, phone, notes, originalPrice, discountedPrice, promoCodeUsed } = req.body;
         if (!templateId || !phone) {
             return res.status(400).json({ message: 'Template and phone are required' });
         }
+        
         const booking = await Booking.create({
             template: templateId,
             user: req.user.id,
             phone,
-            notes: notes || ''
+            notes: notes || '',
+            originalPrice,
+            discountedPrice,
+            promoCodeUsed
         });
+
+        // Increment usage count for the promo code if one was used
+        if (promoCodeUsed) {
+            const PromoCode = require('../models/PromoCode');
+            await PromoCode.findOneAndUpdate(
+                { code: promoCodeUsed.toUpperCase() },
+                { $inc: { currentUses: 1 } }
+            );
+        }
+
         res.status(201).json(booking);
     } catch (err) {
         res.status(500).json({ message: 'Something went wrong', error: err.message });

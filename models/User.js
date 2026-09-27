@@ -14,7 +14,10 @@ const userSchema = new mongoose.Schema({
     // Security & OTP fields
     isVerified: { type: Boolean, default: false },
     otp: { type: String },
-    otpExpires: { type: Date }
+    otpExpires: { type: Date },
+
+    // Wishlist — saved template IDs
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Template' }]
 }, { timestamps: true });
 
 // Virtual: profile is complete when all three optional fields are filled
